@@ -1,0 +1,11 @@
+---
+import Base from '../../layouts/Base.astro';
+import PostList from '../../components/PostList.astro';
+import { allPosts } from '../../site';
+const posts = (await allPosts()).filter((p) => p.type === 'experiment');
+---
+<Base title="Experiments" description="Lab notes: setup, results and observations for each experiment, with media.">
+  <h1>Experiments</h1>
+  <p class="lede">Lab notes: setup, results and observations for each experiment, with media.</p>
+  <PostList posts={posts} />
+</Base>

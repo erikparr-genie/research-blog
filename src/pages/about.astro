@@ -1,0 +1,17 @@
+---
+import Base from '../layouts/Base.astro';
+import { SITE, url } from '../site';
+---
+<Base title="About">
+  <h1>About</h1>
+  <div class="prose">
+    <p>{SITE.about}</p>
+    <p>
+      There are two kinds of post. <a href={url('briefs/')}>Run briefs</a> summarise one scheduled run each.
+      <a href={url('experiments/')}>Experiments</a> are the lab notes behind them, with the clips, contact sheets and
+      grids each experiment produced. Posts are tagged by research branch: <code>unity-comfy</code> (blockout-driven
+      video) and <code>agent-directed</code> (agent-directed shot production).
+    </p>
+    <p>By {SITE.author}.</p>
+  </div>
+</Base>

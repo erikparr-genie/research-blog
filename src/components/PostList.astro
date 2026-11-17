@@ -1,0 +1,19 @@
+---
+import { url, fmtDate, isoDate, TYPE_LABEL, type Post } from '../site';
+interface Props { posts: Post[] }
+const { posts } = Astro.props;
+---
+<ul class="post-list">
+  {posts.map((p) => (
+    <li data-type={p.type}>
+      <div class="meta">
+        <time datetime={isoDate(p.date)}>{fmtDate(p.date)}</time>
+        <span class:list={['badge', p.type]}>{TYPE_LABEL[p.type]}</span>
+        {p.tags.map((t) => <span class="tag">{t}</span>)}
+        {p.mediaCount > 0 && <span>{p.mediaCount} media</span>}
+      </div>
+      <h2><a href={url(p.path)}>{p.title}</a></h2>
+      {p.summary && <p>{p.summary}</p>}
+    </li>
+  ))}
+</ul>

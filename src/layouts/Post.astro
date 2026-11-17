@@ -1,0 +1,48 @@
+---
+import Base from './Base.astro';
+import Media from '../components/Media.astro';
+import { url, fmtDate, isoDate, TYPE_LABEL, SITE, type Post, type PostType } from '../site';
+
+interface Props {
+  type: PostType;
+  data: any;
+  related?: Post[];
+  prev?: Post;
+  next?: Post;
+}
+const { type, data, related = [], prev, next } = Astro.props;
+---
+<Base title={data.title} description={data.summary || SITE.description}>
+  <article>
+    <header class="post-head">
+      <div class="meta">
+        <time datetime={isoDate(data.date)}>{fmtDate(data.date)}</time>
+        <span class:list={['badge', type]}>{TYPE_LABEL[type]}</span>
+        {data.tags.map((t: string) => <span class="tag">{t}</span>)}
+        {data.media.length > 0 && <a href="#media">{data.media.length} media ↓</a>}
+      </div>
+      <h1>{data.title}</h1>
+      {type === 'brief' && (
+        <p class="method">Written by a scheduled research agent (run {data.run}); lightly edited for publication.</p>
+      )}
+      {type === 'experiment' && data.method && <p class="method">Method: {data.method}</p>}
+      {type === 'experiment' && !data.method && data.run && <p class="method">From {data.run}.</p>}
+    </header>
+    <div class="prose">
+      <slot />
+    </div>
+    <Media items={data.media} heading={type === 'brief' ? 'Media from this run' : 'Media'} />
+    {related.length > 0 && (
+      <aside class="related">
+        <h2>{type === 'brief' ? 'Lab notes from this run' : 'Run brief'}</h2>
+        <ul>
+          {related.map((r) => <li><a href={url(r.path)}>{r.title}</a></li>)}
+        </ul>
+      </aside>
+    )}
+    <nav class="pager" aria-label="Posts">
+      {prev && <a class="prev" href={url(prev.path)}>← {prev.title}</a>}
+      {next && <a class="next" href={url(next.path)}>{next.title} →</a>}
+    </nav>
+  </article>
+</Base>

@@ -1,0 +1,28 @@
+---
+import { getCollection, render } from 'astro:content';
+import Post from '../../layouts/Post.astro';
+import { allPosts } from '../../site';
+
+export async function getStaticPaths() {
+  const entries = await getCollection('briefs');
+  const posts = await allPosts();
+  const mine = posts.filter((p) => p.type === 'brief');
+  return entries.map((entry) => {
+    const i = mine.findIndex((p) => p.slug === entry.id);
+    return {
+      params: { slug: entry.id },
+      props: {
+        entry,
+        related: posts.filter((p) => p.type === 'experiment' && entry.data.related.includes(p.slug)),
+        next: mine[i - 1],
+        prev: mine[i + 1],
+      },
+    };
+  });
+}
+const { entry, related, prev, next } = Astro.props;
+const { Content } = await render(entry);
+---
+<Post type="brief" data={entry.data} related={related} prev={prev} next={next}>
+  <Content />
+</Post>

@@ -1,0 +1,18 @@
+---
+import Base from '../layouts/Base.astro';
+import PostList from '../components/PostList.astro';
+import { SITE, allPosts } from '../site';
+const posts = await allPosts();
+const nBrief = posts.filter((p) => p.type === 'brief').length;
+const nExp = posts.length - nBrief;
+---
+<Base>
+  <h1>{SITE.title}</h1>
+  <p class="lede">{SITE.about}</p>
+  <form class="filters" aria-label="Filter posts">
+    <input type="radio" name="f" id="f-all" checked /><label for="f-all">All <span class="n">{posts.length}</span></label>
+    <input type="radio" name="f" id="f-brief" /><label for="f-brief">Run briefs <span class="n">{nBrief}</span></label>
+    <input type="radio" name="f" id="f-experiment" /><label for="f-experiment">Experiments <span class="n">{nExp}</span></label>
+  </form>
+  <PostList posts={posts} />
+</Base>

@@ -1,0 +1,83 @@
+---
+import '../styles/global.css';
+import { SITE, url } from '../site';
+
+interface Props {
+  title?: string;
+  description?: string;
+  wide?: boolean;
+}
+const { title, description = SITE.description, wide = false } = Astro.props;
+const pageTitle = title ? `${title} · ${SITE.title}` : SITE.title;
+const here = Astro.url.pathname;
+const nav = [
+  { href: url(''), label: 'All posts', match: (p: string) => p === url('') },
+  { href: url('briefs/'), label: 'Run briefs', match: (p: string) => p.startsWith(url('briefs/')) },
+  { href: url('experiments/'), label: 'Experiments', match: (p: string) => p.startsWith(url('experiments/')) },
+  { href: url('about/'), label: 'About', match: (p: string) => p.startsWith(url('about/')) },
+];
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{pageTitle}</title>
+    <meta name="description" content={description} />
+    <meta name="author" content={SITE.author} />
+    <meta property="og:title" content={title ?? SITE.title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content={title ? 'article' : 'website'} />
+    <link rel="alternate" type="application/rss+xml" title={SITE.title} href={url('rss.xml')} />
+    <link rel="icon" href={url('favicon.svg')} type="image/svg+xml" />
+    <script is:inline>
+      (function () {
+        try {
+          var t = localStorage.getItem('theme');
+          if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t;
+        } catch (e) {}
+      })();
+    </script>
+  </head>
+  <body>
+    <header class="site-head">
+      <div class="wrap wide">
+        <a class="site-title" href={url('')}>{SITE.title}</a>
+        <nav aria-label="Main">
+          {nav.map((n) => <a href={n.href} aria-current={n.match(here) ? 'page' : undefined}>{n.label}</a>)}
+          <a href={url('rss.xml')}>RSS</a>
+          <button class="theme-toggle" type="button" id="theme-toggle" aria-label="Switch between light and dark theme">Theme</button>
+        </nav>
+      </div>
+    </header>
+    <main>
+      <div class:list={['wrap', { wide }]}>
+        <slot />
+      </div>
+    </main>
+    <footer class="site-foot">
+      <div class="wrap wide">
+        {SITE.title} · by {SITE.author} · <a href={url('about/')}>About</a> · <a href={url('rss.xml')}>RSS</a>
+      </div>
+    </footer>
+    <script is:inline>
+      (function () {
+        var btn = document.getElementById('theme-toggle');
+        var root = document.documentElement;
+        function current() {
+          return root.dataset.theme || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        }
+        function label() {
+          btn.textContent = current() === 'dark' ? 'Light' : 'Dark';
+        }
+        label();
+        btn.addEventListener('click', function () {
+          var next = current() === 'dark' ? 'light' : 'dark';
+          root.dataset.theme = next;
+          try { localStorage.setItem('theme', next); } catch (e) {}
+          label();
+        });
+      })();
+    </script>
+  </body>
+</html>

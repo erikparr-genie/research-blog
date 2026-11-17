@@ -1,0 +1,11 @@
+---
+import Base from '../../layouts/Base.astro';
+import PostList from '../../components/PostList.astro';
+import { allPosts } from '../../site';
+const posts = (await allPosts()).filter((p) => p.type === 'brief');
+---
+<Base title="Run briefs" description="One brief per scheduled research run: what was new, what was built and measured, and what is next.">
+  <h1>Run briefs</h1>
+  <p class="lede">One brief per scheduled research run: what was new, what was built and measured, and what is next. Runs that failed before writing a brief have no post.</p>
+  <PostList posts={posts} />
+</Base>
