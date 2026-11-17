@@ -62,7 +62,9 @@ per-frame dumps, 3D files, and outputs that show third-party sample photos or fo
 - All metadata embedded in media files (ComfyUI stores the full workflow in its outputs).
 - Sentences addressed to the author, listed one by one in `scripts/edits.mjs`.
 
-The import fails if an email address, a home path, a private-repo link, a credential-like string
+Names that must never appear (employer, clients, private domains) are listed locally in
+`scripts/private-terms.txt`, one per line; that file is gitignored so the names are not published
+here either. The import fails if one of those names, an email address, a home path, a private-repo link, a credential-like string
 or one of a few other patterns is left in a generated post. `npm run check` repeats those checks on
 the built site, including strings inside media files, and verifies every internal link and media
 reference.
