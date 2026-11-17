@@ -11,15 +11,17 @@ interface Props {
   next?: Post;
 }
 const { type, data, related = [], prev, next } = Astro.props;
+const [cover, ...rest] = data.media;
+const ogThumb = cover?.thumb && !cover.thumb.endsWith('.svg') ? cover.thumb : undefined;
 ---
-<Base title={data.title} description={data.summary || SITE.description}>
+<Base title={data.title} description={data.summary || SITE.description} image={ogThumb}>
   <article>
     <header class="post-head">
       <div class="meta">
         <time datetime={isoDate(data.date)}>{fmtDate(data.date)}</time>
         <span class:list={['badge', type]}>{TYPE_LABEL[type]}</span>
         {data.tags.map((t: string) => <span class="tag">{t}</span>)}
-        {data.media.length > 0 && <a href="#media">{data.media.length} media ↓</a>}
+        {rest.length > 0 && <a href="#media">{rest.length} more media ↓</a>}
       </div>
       <h1>{data.title}</h1>
       {type === 'brief' && (
@@ -28,10 +30,11 @@ const { type, data, related = [], prev, next } = Astro.props;
       {type === 'experiment' && data.method && <p class="method">Method: {data.method}</p>}
       {type === 'experiment' && !data.method && data.run && <p class="method">From {data.run}.</p>}
     </header>
+    {cover && <Media items={[cover]} cover />}
     <div class="prose">
       <slot />
     </div>
-    <Media items={data.media} heading={type === 'brief' ? 'Media from this run' : 'Media'} />
+    <Media items={rest} heading={type === 'brief' ? 'More media from this run' : 'More media'} />
     {related.length > 0 && (
       <aside class="related">
         <h2>{type === 'brief' ? 'Lab notes from this run' : 'Run brief'}</h2>

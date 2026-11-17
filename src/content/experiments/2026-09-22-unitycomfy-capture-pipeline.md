@@ -4,7 +4,7 @@ date: "2026-09-22"
 tags: ["unity-comfy"]
 method: "Lab notebook written during the run; numbers copied from Unity batch logs, ffprobe and a Python reprojection check"
 summary: "Prove that a rough Unity blockout can be rendered into frame-accurate control passes and sent to ComfyUI and back, with no manual steps."
-media: [{"src":"media/2026-09-22-unitycomfy-capture-pipeline/demo-street-pass-contact-sheet.png","kind":"image","caption":"Contact sheet of the capture passes for the demo street shot."},{"src":"media/2026-09-22-unitycomfy-capture-pipeline/guide-blend-roundtrip.png","kind":"image","caption":"Guide blend after the ComfyUI round trip."}]
+media: [{"src":"media/2026-09-22-unitycomfy-capture-pipeline/demo-street-pass-contact-sheet.png","kind":"image","caption":"Contact sheet of the capture passes for the demo street shot.","thumb":"media/2026-09-22-unitycomfy-capture-pipeline/demo-street-pass-contact-sheet.thumb.jpg"},{"src":"media/2026-09-22-unitycomfy-capture-pipeline/guide-blend-roundtrip.png","kind":"image","caption":"Guide blend after the ComfyUI round trip."}]
 ---
 
 ## Goal

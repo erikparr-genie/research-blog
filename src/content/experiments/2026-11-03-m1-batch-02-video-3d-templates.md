@@ -4,7 +4,7 @@ date: "2026-11-03"
 tags: ["unity-comfy"]
 run: "scheduled run 2026-11-03_0700"
 summary: "Plan item: M1 item 1 (D3 at scale), with items 4 (E2 rules) and V1. First batch judged on both input sets, as decided on 2026-10-27."
-media: [{"src":"media/2026-11-03-m1-batch-02-video-3d-templates/sdpose-multi-sample-pose.jpg","kind":"image","caption":"SDPose multi-person on the template’s sample photo of about 8 people: one detection (the template ships max_detections = 1). Pose map only; the sample photo is not reproduced."},{"src":"media/2026-11-03-m1-batch-02-video-3d-templates/seedvr2-upscale-unity.jpg","kind":"image","caption":"SeedVR2 3B int8 image upscale of the Unity frame."}]
+media: [{"src":"media/2026-11-03-m1-batch-02-video-3d-templates/sdpose-multi-sample-pose.jpg","kind":"image","caption":"SDPose multi-person on the template’s sample photo of about 8 people: one detection (the template ships max_detections = 1). Pose map only; the sample photo is not reproduced.","thumb":"media/2026-11-03-m1-batch-02-video-3d-templates/sdpose-multi-sample-pose.thumb.jpg"},{"src":"media/2026-11-03-m1-batch-02-video-3d-templates/seedvr2-upscale-unity.jpg","kind":"image","caption":"SeedVR2 3B int8 image upscale of the Unity frame."}]
 ---
 
 **Plan item:** M1 item 1 (D3 at scale), with items 4 (E2 rules) and V1. First batch judged on both

@@ -7,6 +7,10 @@
 // `seq`   : src is a glob of PNG frames; they are encoded to one H.264 mp4 at `fps`
 // `crop`  : ffmpeg crop expression applied to an image
 // `brief` : also show this item on the run brief of the same date
+// `gen`   : instead of `src`: name of a generator in scripts/figures.mjs (SVG drawn
+//           from the note's own recorded numbers, for notes with no image)
+//
+// Every post needs at least one item: the first one is its cover image.
 //
 // Not published on purpose: runner-test fixture clips, raw per-frame PNG dumps,
 // 3D files (.glb/.spz/.ply), and outputs that show the third-party sample photos
@@ -81,7 +85,7 @@ export default [
 
   // Experiment 012
   { post: '2026-11-03-m1-batch-02-video-3d-templates', src: `${M}/2026-11-03_m1-batch-02/sdpose-multi-sample.jpg`, crop: 'iw/2:ih:0:0', out: 'sdpose-multi-sample-pose.jpg', caption: 'SDPose multi-person on the template’s sample photo of about 8 people: one detection (the template ships max_detections = 1). Pose map only; the sample photo is not reproduced.' },
-  { post: '2026-11-03-m1-batch-02-video-3d-templates', src: `${M}/2026-11-03_m1-batch-02/utility_seedvr2_3b_int8_upscale_image/*_00001_.png`, out: 'seedvr2-upscale-unity.jpg', caption: 'SeedVR2 3B int8 image upscale of the Unity frame.' },
+  { post: '2026-11-03-m1-batch-02-video-3d-templates', brief: true, src: `${M}/2026-11-03_m1-batch-02/utility_seedvr2_3b_int8_upscale_image/*_00001_.png`, out: 'seedvr2-upscale-unity.jpg', caption: 'SeedVR2 3B int8 image upscale of the Unity frame.' },
 
   // Experiment 013
   { post: '2026-11-10-m1-batch-02bc-supervisor-node-compat', brief: true, src: `${M}/2026-11-10_m1-batch-02bc/video_wan2.1_fun_camera_v1.1_1.3B/*_00001_.mp4`, out: 'wan-fun-camera-unity.mp4', caption: 'Wan 2.1 Fun Camera v1.1 1.3B, “Zoom In” on the Unity street frame (512², 81 frames, 17.9 min).' },
@@ -102,4 +106,8 @@ export default [
   { post: '2026-11-17-m1-batch-02ghi-size-preflight-mask-check-moge-repeats', seq: true, fps: 16, src: `${M}/2026-11-17_m1-batch-02ghi/sam3_video_unity_car/*_.png`, out: 'sam3-unity-car.mp4', caption: 'Same clip, prompt “car”: it also selects the mannequin.' },
   { post: '2026-11-17-m1-batch-02ghi-size-preflight-mask-check-moge-repeats', src: `${M}/2026-11-17_m1-batch-02ghi/sdpose_multi_person_video_832/*_.mp4`, out: 'sdpose-multi-unity-832.mp4', caption: 'SDPose multi-person video on the Unity clay clip at 832×480: 8 of 81 frames have no pose.' },
   { post: '2026-11-17-m1-batch-02ghi-size-preflight-mask-check-moge-repeats', seq: true, fps: 24, src: `${M}/2026-11-17_m1-batch-02ghi/utility_sdpose_multi_person_video@sample/*_.png`, out: 'sdpose-multi-sample-pose.mp4', caption: 'SDPose multi-person video pose map on the template’s sample clip (1024², 121 frames; pose maps only, encoded from the PNG sequence).' },
+
+  // Experiments 007 and 011 produced no images: one figure each, drawn from their results.
+  { post: '2026-10-23-e2-frontend-vs-cli-conversion', gen: 'e2Templates', out: 'e2-20-templates.svg', caption: 'Outcome of the 20-template comparison (figure drawn for publication from the counts in this note).' },
+  { post: '2026-11-03-torch-2.15-ga-wheel-check', gen: 'invStatus', out: 'linalg-inv-by-size.svg', caption: 'The linalg.inv repro per batch size: torch 2.12.1 (Experiment 008) against the 2.15.0 GA wheel (figure drawn for publication from the recorded result files).' },
 ];

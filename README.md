@@ -39,6 +39,11 @@ After a new run, the usual steps are:
 3. To publish media for a new experiment, add entries to `scripts/media-manifest.mjs` (source path
    in the research repo, published file name, caption) and rerun. Existing media files are kept;
    `FORCE_MEDIA=1 npm run import` re-creates them all.
+   Every post must have at least one image: the first item is the post's cover (shown at the top
+   of the post and as the thumbnail in lists), and the import fails if a post has none. A brief
+   uses the items marked `brief: true` for its date, or else the cover of a lab note of that date.
+   For a note with no image in the sources, add a small generator to `scripts/figures.mjs` that
+   draws the note's own recorded numbers, and reference it with `gen`.
 4. `npm run build && npm run check`, then commit and push.
 
 ### What the import includes

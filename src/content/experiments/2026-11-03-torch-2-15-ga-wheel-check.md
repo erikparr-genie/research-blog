@@ -4,6 +4,7 @@ date: "2026-11-03"
 tags: ["unity-comfy"]
 run: "scheduled run 2026-11-03_0700"
 summary: "Question. torch 2.15.0 went GA on 28 Oct (PyPI upload 2026-10-28T15:16:35). Experiment 008 (2026-10-23) measured a 2.15.0 build from whl/test and the wiki assumed it \"most likely was the Final RC\". Is the test venv's…"
+media: [{"src":"media/2026-11-03-torch-2-15-ga-wheel-check/linalg-inv-by-size.svg","kind":"image","caption":"The linalg.inv repro per batch size: torch 2.12.1 (Experiment 008) against the 2.15.0 GA wheel (figure drawn for publication from the recorded result files).","thumb":"media/2026-11-03-torch-2-15-ga-wheel-check/linalg-inv-by-size.svg"}]
 ---
 
 **Question.** torch 2.15.0 went GA on 28 Oct (PyPI upload 2026-10-28T15:16:35). Experiment 008

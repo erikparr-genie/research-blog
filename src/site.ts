@@ -25,6 +25,9 @@ export interface Post {
   tags: string[];
   summary: string;
   mediaCount: number;
+  /** Small cover image for lists (first media item). */
+  thumb?: string;
+  thumbAlt?: string;
 }
 
 export async function allPosts(): Promise<Post[]> {
@@ -40,6 +43,8 @@ export async function allPosts(): Promise<Post[]> {
       tags: e.data.tags,
       summary: e.data.summary,
       mediaCount: e.data.media.length,
+      thumb: e.data.media[0]?.thumb,
+      thumbAlt: e.data.media[0]?.caption,
     }))
     .sort(
       (a, b) =>

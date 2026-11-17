@@ -6,8 +6,10 @@ interface Props {
   title?: string;
   description?: string;
   wide?: boolean;
+  /** Site-relative path of a jpg/png for link previews. */
+  image?: string;
 }
-const { title, description = SITE.description, wide = false } = Astro.props;
+const { title, description = SITE.description, wide = false, image } = Astro.props;
 const pageTitle = title ? `${title} · ${SITE.title}` : SITE.title;
 const here = Astro.url.pathname;
 const nav = [
@@ -28,6 +30,7 @@ const nav = [
     <meta property="og:title" content={title ?? SITE.title} />
     <meta property="og:description" content={description} />
     <meta property="og:type" content={title ? 'article' : 'website'} />
+    {image && <meta property="og:image" content={new URL(url(image), Astro.site).href} />}
     <link rel="alternate" type="application/rss+xml" title={SITE.title} href={url('rss.xml')} />
     <link rel="icon" href={url('favicon.svg')} type="image/svg+xml" />
     <script is:inline>

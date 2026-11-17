@@ -1,12 +1,12 @@
 ---
 import { url } from '../site';
 interface Item { src: string; kind: 'video' | 'image'; caption: string; poster?: string }
-interface Props { items: Item[]; heading?: string }
-const { items, heading = 'Media' } = Astro.props;
+interface Props { items: Item[]; heading?: string; cover?: boolean }
+const { items, heading = 'Media', cover = false } = Astro.props;
 ---
 {items.length > 0 && (
-  <section class="media" id="media">
-    <h2>{heading}</h2>
+  <section class:list={[cover ? 'cover' : 'media']} id={cover ? undefined : 'media'}>
+    {!cover && <h2>{heading}</h2>}
     <div class="media-grid">
       {items.map((m) => (
         <figure class:list={[{ full: items.length === 1 }]}>
@@ -16,7 +16,7 @@ const { items, heading = 'Media' } = Astro.props;
               <a href={url(m.src)}>Download the video</a>
             </video>
           ) : (
-            <a href={url(m.src)}><img src={url(m.src)} alt={m.caption} loading="lazy" decoding="async" /></a>
+            <a href={url(m.src)}><img src={url(m.src)} alt={m.caption} loading={cover ? "eager" : "lazy"} decoding="async" /></a>
           )}
           <figcaption>{m.caption}</figcaption>
         </figure>

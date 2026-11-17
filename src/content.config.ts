@@ -8,6 +8,7 @@ const media = z.array(
     kind: z.enum(['video', 'image']),
     caption: z.string(),
     poster: z.string().optional(),
+    thumb: z.string().optional(),
   }),
 );
 

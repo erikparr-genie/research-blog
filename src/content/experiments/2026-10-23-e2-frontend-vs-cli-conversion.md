@@ -4,6 +4,7 @@ date: "2026-10-23"
 tags: ["unity-comfy"]
 method: "Unattended research run 2026-10-23_0700. Local ComfyUI 0.38.2, frontend 1.53.6, Google Chrome headless driven over the DevTools protocol. comfy-cli 1.22.0, then 1.23.0, in its own venv. Nothing was queued (checked with /api/jobs before and after)."
 summary: "The last M0 exit item, E2: diff the comfy-cli UI → API conversion against what the frontend's Save (API) produces. Earlier runs skipped it because \"it needs a browser session\". If it worked, the plan was to also run the…"
+media: [{"src":"media/2026-10-23-e2-frontend-vs-cli-conversion/e2-20-templates.svg","kind":"image","caption":"Outcome of the 20-template comparison (figure drawn for publication from the counts in this note).","thumb":"media/2026-10-23-e2-frontend-vs-cli-conversion/e2-20-templates.svg"}]
 ---
 
 ## Goal

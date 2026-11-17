@@ -4,7 +4,7 @@ date: "2026-10-23"
 tags: ["unity-comfy"]
 method: "Unattended research run 2026-10-23_0700, after Experiment 005. Local ComfyUI 0.38.2 (MPS, torch 2.12.1). Numbers come from the scripts' JSON output in the assets folder."
 summary: "Method: - Parse the .spz with spz-check.py's parser. Keep the points with opacity ≥ 0.5 (99.7% here). - Project orthographically along an axis-aligned view, rasterise, then close and hole-fill. - Normalise both…"
-media: [{"src":"media/2026-10-23-triposplat-silhouette-adherence/silhouettes.png","kind":"image","caption":"Ground-truth mask, splat silhouette and overlap, for both subjects."},{"src":"media/2026-10-23-triposplat-silhouette-adherence/mannequin-crop-input.png","kind":"image","caption":"TripoSplat input: Unity mannequin crop."}]
+media: [{"src":"media/2026-10-23-triposplat-silhouette-adherence/silhouettes.png","kind":"image","caption":"Ground-truth mask, splat silhouette and overlap, for both subjects.","thumb":"media/2026-10-23-triposplat-silhouette-adherence/silhouettes.thumb.jpg"},{"src":"media/2026-10-23-triposplat-silhouette-adherence/mannequin-crop-input.png","kind":"image","caption":"TripoSplat input: Unity mannequin crop."}]
 ---
 
 ## Goal

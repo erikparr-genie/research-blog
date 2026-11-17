@@ -18,6 +18,7 @@ import path from 'node:path';
 import { execFileSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import manifest from './media-manifest.mjs';
+import figures from './figures.mjs';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const SRC = path.resolve(ROOT, process.env.RESEARCH_SRC || '../ai-video-production');
@@ -320,7 +321,10 @@ function convertBrief(b) {
   }
   if (tags.size === 0) tags.add('unity-comfy');
 
-  const media = mediaFor((m) => m.brief && m.post.slice(0, 10) === b.date);
+  let media = mediaFor((m) => m.brief && m.post.slice(0, 10) === b.date);
+  // Nothing flagged for the brief: fall back to the cover of a lab note of that date.
+  if (media.length === 0) media = mediaFor((m) => m.post.slice(0, 10) === b.date).slice(0, 1);
+  if (media.length === 0) noCover.push(`briefs/${b.slug}: mark an item of that date with brief: true in media-manifest.mjs`);
   const related = experiments.filter((e) => e.date === b.date).map((e) => e.slug);
   const fm = yaml({
     title,
@@ -344,6 +348,8 @@ function convertExperiment(e) {
   body = outsideCode(body, (t) => t.replace(/~/g, '\\~'));
   body = rewriteLinks(body, 'experiment');
   const method = e.fm.method ? scrubPaths(e.fm.method).replace(/`/g, '') : undefined;
+  const media = mediaFor((m) => m.post === e.name);
+  if (media.length === 0) noCover.push(`experiments/${e.slug}: add an item to media-manifest.mjs`);
   const firstPara = body.split(/\n\s*\n/).find((p) => p.trim() && !/^\s*(#|\||-|\d+\.|```|>)/.test(p)) || '';
   const fm = yaml({
     title: e.title,
@@ -352,7 +358,7 @@ function convertExperiment(e) {
     run: e.fm.run,
     method,
     summary: plainSummary(firstPara),
-    media: mediaFor((m) => m.post === e.name),
+    media,
   });
   return `---\n${fm}\n---\n\n${body.trim()}\n`;
 }
@@ -372,6 +378,7 @@ function ffmpeg(args) {
   execFileSync('ffmpeg', ['-v', 'error', '-y', ...args], { stdio: ['ignore', 'inherit', 'inherit'] });
 }
 
+const noCover = []; // every post must have an image
 const mediaStats = { copied: 0, kept: 0, missing: 0 };
 
 function buildMedia() {
@@ -383,8 +390,14 @@ function buildMedia() {
     const dest = path.join(OUT_MEDIA, expBySlug.get(m.post).slug, m.out);
     const isVideo = m.out.endsWith('.mp4');
     const poster = dest.replace(/\.mp4$/, '.poster.jpg');
-    if (exists(dest) && (!isVideo || exists(poster)) && !process.env.FORCE_MEDIA) {
+    if (exists(dest) && (!isVideo || exists(poster)) && !process.env.FORCE_MEDIA && !m.gen) {
       mediaStats.kept++;
+      continue;
+    }
+    if (m.gen) {
+      fs.mkdirSync(path.dirname(dest), { recursive: true });
+      fs.writeFileSync(dest, figures[m.gen]((rel) => fs.readFileSync(path.join(SRC, MEDIA_BRANCH, rel), 'utf8')));
+      mediaStats.copied++;
       continue;
     }
     const srcs = resolveSrc(m.src);
@@ -421,14 +434,28 @@ function buildMedia() {
   }
 }
 
+const usedThumbs = new Set();
+function thumbFor(rel) {
+  if (rel.endsWith('.svg')) return rel;
+  const out = rel.replace(/\.[a-z0-9]+$/, '.thumb.jpg');
+  usedThumbs.add(out);
+  const dest = path.join(ROOT, 'public', out);
+  if (!exists(dest) || process.env.FORCE_MEDIA) {
+    ffmpeg(['-i', path.join(ROOT, 'public', rel), '-map_metadata', '-1', '-vf', "scale='min(640,iw)':-2", '-frames:v', '1', '-update', '1', '-q:v', '5', dest]);
+  }
+  return out;
+}
+
 function mediaFor(pred) {
   return manifest
     .filter(pred)
     .filter((m) => expBySlug.has(m.post) && exists(path.join(OUT_MEDIA, expBySlug.get(m.post).slug, m.out)))
-    .map((m) => {
+    .map((m, i) => {
       const src = `media/${expBySlug.get(m.post).slug}/${m.out}`;
       const item = { src, kind: m.out.endsWith('.mp4') ? 'video' : 'image', caption: m.caption };
       if (item.kind === 'video') item.poster = src.replace(/\.mp4$/, '.poster.jpg');
+      // The first item is the post's cover: it also gets a small thumbnail for lists.
+      if (i === 0) item.thumb = thumbFor(item.poster || src);
       return item;
     });
 }
@@ -506,6 +533,17 @@ console.log(`\nbriefs: ${briefs.length}   experiments: ${experiments.length}`);
 console.log(`runs without a post: ${skippedRuns.join('; ') || 'none'}`);
 console.log(`media: ${mediaStats.copied} written, ${mediaStats.kept} already present, ${mediaStats.missing} missing`);
 console.log(`scrub: ${removed.sections} sections, ${removed.lines} lines, ${removed.privateLinks} private links -> text, ${removed.internalLinks} links -> internal, ${removed.edits} manual edits`);
+// Thumbnails of items that are no longer a cover.
+for (const dir of exists(OUT_MEDIA) ? fs.readdirSync(OUT_MEDIA) : []) {
+  if (!fs.statSync(path.join(OUT_MEDIA, dir)).isDirectory()) continue;
+  for (const f of fs.readdirSync(path.join(OUT_MEDIA, dir))) {
+    if (f.endsWith('.thumb.jpg') && !usedThumbs.has(`media/${dir}/${f}`)) fs.rmSync(path.join(OUT_MEDIA, dir, f));
+  }
+}
+if (noCover.length) {
+  console.error('\nEvery post needs an image. Missing:\n  ' + noCover.join('\n  '));
+  process.exit(1);
+}
 if (failed) {
   console.error('\nForbidden content found in generated posts. Fix the rules in scripts/import.mjs or scripts/edits.mjs.');
   process.exit(1);

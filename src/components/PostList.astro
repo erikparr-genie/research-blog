@@ -5,7 +5,13 @@ const { posts } = Astro.props;
 ---
 <ul class="post-list">
   {posts.map((p) => (
-    <li data-type={p.type}>
+    <li data-type={p.type} class:list={[{ 'has-thumb': !!p.thumb }]}>
+      {p.thumb && (
+        <a class="thumb" href={url(p.path)} tabindex="-1" aria-hidden="true">
+          <img src={url(p.thumb)} alt="" loading="lazy" decoding="async" />
+        </a>
+      )}
+      <div class="body">
       <div class="meta">
         <time datetime={isoDate(p.date)}>{fmtDate(p.date)}</time>
         <span class:list={['badge', p.type]}>{TYPE_LABEL[p.type]}</span>
@@ -14,6 +20,7 @@ const { posts } = Astro.props;
       </div>
       <h2><a href={url(p.path)}>{p.title}</a></h2>
       {p.summary && <p>{p.summary}</p>}
+      </div>
     </li>
   ))}
 </ul>
